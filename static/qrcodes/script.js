@@ -1,61 +1,120 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const searchInput = document.getElementById("searchInput");
-  const categoryButtons = document.getElementById("categoryButtons");
-  const menuItems = document.querySelectorAll("#menuItems .menu-item");
-  const cartCount = document.getElementById("cartCount");
+function showVegItems() {
+  hideAllTabs();
+  document.getElementById('vegcontents').classList.add('active');
+}
 
-  let activeCategory = "veg";
-  let cartItems = 0;
+function showNonVegItems() {
+  hideAllTabs();
+  document.getElementById('nonvegcontents').classList.add('active');
+}
 
-  // Filter menu items by category and search text
-  function filterMenu() {
-    const searchText = searchInput.value.toLowerCase();
+function showdrinks() {
+  hideAllTabs();
+  document.getElementById('drinkcontents').classList.add('active');
+}
 
-    menuItems.forEach((item) => {
-      const name = item.dataset.name.toLowerCase();
-      const category = item.dataset.category;
+function showdesert() {
+  hideAllTabs();
+  document.getElementById('desertcontents').classList.add('active');
+}
 
-      const matchesCategory =
-        activeCategory === "all" || category === activeCategory;
-      const matchesSearch = name.includes(searchText);
+// Helper to hide all tabs before showing one
+function hideAllTabs() {
+  document.getElementById('vegcontents').classList.remove('active');
+  document.getElementById('nonvegcontents').classList.remove('active');
+  document.getElementById('drinkcontents').classList.remove('active');
+  document.getElementById('desertcontents').classList.remove('active');
+}
 
-      if (matchesCategory && matchesSearch) {
-        item.style.display = "flex";
+// Show veg by default on load
+window.onload = function () {
+  showVegItems();
+};
+function searchMenu() {
+  const query = document.getElementById("searchInput").value.toLowerCase();
+  const allSections = document.querySelectorAll(".tab-content");
+
+  // Loop through all menu sections
+  allSections.forEach(section => {
+    const cards = section.querySelectorAll(".menu-card");
+
+    cards.forEach(card => {
+      const title = card.querySelector("h4").textContent.toLowerCase();
+
+      // Match text with search
+      if (title.includes(query)) {
+        card.style.display = "block";
+        card.classList.add("highlight"); // Optional highlight
       } else {
-        item.style.display = "none";
+        card.style.display = "none";
+        card.classList.remove("highlight");
       }
     });
-  }
-
-  // Handle category button clicks
-  categoryButtons.addEventListener("click", (e) => {
-    if (e.target.tagName !== "BUTTON") return;
-
-    activeCategory = e.target.dataset.category;
-
-    // Update active button styling
-    categoryButtons.querySelectorAll("button").forEach((btn) => {
-      btn.classList.toggle("active", btn === e.target);
-    });
-
-    filterMenu();
   });
 
-  // Handle search input
-  searchInput.addEventListener("input", filterMenu);
-
-  // Handle add to cart buttons
-  menuItems.forEach((item) => {
-    const button = item.querySelector("button");
-    button.addEventListener("click", () => {
-      cartItems++;
-      cartCount.textContent = cartItems;
-      button.textContent = "Added ✓";
-      button.disabled = true;
-      button.style.backgroundColor = "#4a2c2c";
+  // Optional: remove highlight after 2 seconds
+  setTimeout(() => {
+    document.querySelectorAll(".menu-card.highlight").forEach(card => {
+      card.classList.remove("highlight");
     });
+  }, 5000);
+}
+
+
+function addToCart(itemName, price) {
+  alert(`${itemName} (Rs. ${price}) added to cart!`);
+  // You can replace this with actual cart logic later
+}
+
+let cart = [];
+
+function addToCart(itemName, price) {
+  cart.push({ name: itemName, price: price });
+  renderCart();
+}
+
+function renderCart() {
+  const cartItemsContainer = document.getElementById("cart-items");
+  const cartTotalContainer = document.getElementById("cart-total");
+
+  cartItemsContainer.innerHTML = "";
+  let total = 0;
+
+  cart.forEach((item) => {
+    const li = document.createElement("li");
+    li.textContent = `${item.name} - Rs. ${item.price}`;
+    cartItemsContainer.appendChild(li);
+    total += item.price;
   });
 
-  // Initial filter
-  filterMenu();
-});
+  cartTotalContainer.textContent = `Total: Rs. ${total}`;
+}
+function filterMenu() {
+  const filter = document.getElementById("filter").value;
+
+  // Find currently visible tab-content (the active one)
+  const activeSection = document.querySelector(".tab-content.active");
+  if (!activeSection) return;
+
+  const cards = Array.from(activeSection.querySelectorAll(".menu-card"));
+
+  // Helper to extract price
+  const getPrice = (card) => {
+    const priceText = card.querySelector("p").textContent;
+    return parseInt(priceText.replace(/\D/g, ""));
+  };
+
+  // Sort cards based on filter value
+  cards.sort((a, b) => {
+    const priceA = getPrice(a);
+    const priceB = getPrice(b);
+
+    if (filter === "price-asc") return priceA - priceB;
+    if (filter === "price-desc") return priceB - priceA;
+    return 0;
+  });
+
+  // Append cards back in sorted order
+  const grid = activeSection.querySelector(".menu-grid");
+  cards.forEach(card => grid.appendChild(card));
+}

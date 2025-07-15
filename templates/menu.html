@@ -1,259 +1,571 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Smart Café Menu</title>
-    <style>
-      /* Reset some default styles */
-      * {
-        box-sizing: border-box;
-      }
-      body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background-color: #f2f2f0;
-        color: #333;
-      }
-      header {
-        background-color: #6b4f4f;
-        padding: 15px 20px;
-        display: flex;
-        align-items: center;
-        border-bottom: 3px solid #d9b382;
-        color: white;
-      }
-      header img {
-        height: 50px;
-        margin-right: 15px;
-      }
-      header h1 {
-        font-style: italic;
-        font-weight: 700;
-        font-size: 1.8rem;
-        margin: 0;
-        user-select: none;
-      }
-      header h1 .coffee-emoji {
-        font-size: 1.4rem;
-      }
-      main {
-        display: flex;
-        padding: 15px 20px;
-        gap: 20px;
-      }
-      .sidebar {
-        width: 250px;
-        background: #d9b382;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 2px 2px 10px #ccc;
-      }
-      .sidebar h2 {
-        font-weight: 700;
-        margin-bottom: 15px;
-        color: #4a2c2c;
-      }
-      .search-container input[type="text"] {
-        width: 100%;
-        padding: 8px 10px;
-        border: none;
-        border-radius: 5px;
-        font-size: 1rem;
-      }
-      .category-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin: 20px 0;
-      }
-      .category-buttons button {
-        padding: 12px 0;
-        border-radius: 6px;
-        border: none;
-        font-weight: 700;
-        font-size: 1.1rem;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        background-color: #b18b6a;
-        color: white;
-      }
-      .category-buttons button.active {
-        background-color: #6b4f4f;
-        box-shadow: 0 0 10px #6b4f4f;
-      }
-      .cart {
-        background-color: #f0e5cf;
-        border: 2px solid #d9b382;
-        padding: 15px;
-        border-radius: 8px;
-        font-weight: 700;
-        font-size: 1.1rem;
-        color: #4a2c2c;
-      }
-      .content {
-        flex-grow: 1;
-      }
-      .content h2 {
-        font-weight: 700;
-        margin-bottom: 20px;
-        color: #6b4f4f;
-      }
-      .menu-item {
-        margin-bottom: 25px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #ddd;
-        display: flex;
-        gap: 15px;
-        align-items: center;
-      }
-      .menu-item img {
-        width: 120px;
-        height: 90px;
-        object-fit: cover;
-        border-radius: 6px;
-        box-shadow: 2px 2px 6px #aaa;
-      }
-      .menu-item-details {
-        flex-grow: 1;
-      }
-      .menu-item b {
-        display: block;
-        font-weight: 700;
-        font-size: 1.1rem;
-        margin-bottom: 5px;
-        color: #4a2c2c;
-      }
-      .price {
-        font-weight: 600;
-        font-size: 1rem;
-        color: #7a5a3c;
-      }
-      .menu-item button {
-        background-color: #6b4f4f;
-        border: none;
-        color: white;
-        padding: 8px 14px;
-        font-size: 0.9rem;
-        cursor: pointer;
-        border-radius: 6px;
-        transition: background-color 0.25s;
-      }
-      .menu-item button:hover {
-        background-color: #4a2c2c;
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <img src="/static/bic-logo.png" alt="BIC Cafe Logo" />
-      <h1>
-        WELCOME TO OUR <i>BIC CAFÉ</i> <span class="coffee-emoji">☕</span>
-      </h1>
-    </header>
-    <main>
-      <aside class="sidebar">
-        <h2>Categories</h2>
-        <div class="search-container">
-          <input type="text" id="searchInput" placeholder="Search menu..." />
-        </div>
-        <div class="category-buttons" id="categoryButtons">
-          <button class="active" data-category="veg">Veg Items</button>
-          <button data-category="nonveg">Non-Veg Items</button>
-          <button data-category="drinks">Drinks</button>
-          <button data-category="dessert">Dessert</button>
-        </div>
-        <div class="cart">
-          <p><b>Your Cart</b></p>
-          <p>Total items: <span id="cartCount">0</span></p>
-        </div>
-      </aside>
-      <section class="content">
-        <h2>Menu</h2>
-        <div id="menuItems">
-          <!-- Sample items -->
-          <div
-            class="menu-item"
-            data-category="veg"
-            data-name="Paneer Butter Masala"
-          >
-            <img
-              src="https://www.cubesnjuliennes.com/wp-content/uploads/2018/01/Paneer-Butter-Masala-Recipe-1.jpg"
-              alt="Paneer Butter Masala"
-            />
-            <div class="menu-item-details">
-              <b>Paneer Butter Masala</b>
-              <p class="price">Rs. 250</p>
-            </div>
-            <button>Add to Cart</button>
-          </div>
-          <div class="menu-item" data-category="veg" data-name="Veg Biryani">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSd0bfZTxu8ShUAFvCPklp6XpTKHEHC5mjWmw&usqp=CAU"
-              alt="Veg Biryani"
-            />
-            <div class="menu-item-details">
-              <b>Veg Biryani</b>
-              <p class="price">Rs. 180</p>
-            </div>
-            <button>Add to Cart</button>
-          </div>
-          <div class="menu-item" data-category="veg" data-name="Palak Paneer">
-            <img
-              src="https://img.freepik.com/free-photo/palak-paneer-indian-curry-with-spinach-vegetable-plate_2829-10745.jpg"
-              alt="Palak Paneer"
-            />
-            <div class="menu-item-details">
-              <b>Palak Paneer</b>
-              <p class="price">Rs. 200</p>
-            </div>
-            <button>Add to Cart</button>
-          </div>
-          <div
-            class="menu-item"
-            data-category="nonveg"
-            data-name="Chicken Curry"
-          >
-            <img
-              src="https://www.indianhealthyrecipes.com/wp-content/uploads/2020/05/chicken-curry-recipe.jpg"
-              alt="Chicken Curry"
-            />
-            <div class="menu-item-details">
-              <b>Chicken Curry</b>
-              <p class="price">Rs. 300</p>
-            </div>
-            <button>Add to Cart</button>
-          </div>
-          <div class="menu-item" data-category="drinks" data-name="Masala Chai">
-            <img
-              src="https://cdn.pixabay.com/photo/2017/11/17/13/02/tea-2952920_1280.jpg"
-              alt="Masala Chai"
-            />
-            <div class="menu-item-details">
-              <b>Masala Chai</b>
-              <p class="price">Rs. 80</p>
-            </div>
-            <button>Add to Cart</button>
-          </div>
-          <div
-            class="menu-item"
-            data-category="dessert"
-            data-name="Gulab Jamun"
-          >
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/4/40/Gulab_jamun_and_ice_cream.jpg"
-              alt="Gulab Jamun"
-            />
-            <div class="menu-item-details">
-              <b>Gulab Jamun</b>
-              <p class="price">Rs. 120</p>
-            </div>
-            <button>Add to Cart</button>
-          </div>
-        </div>
-      </section>
-    </main>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js"></script>
+  <title>Cafe Menu</title>
+</head>
+<style>
+  /* GENERAL RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    <script src="/static/script.js"></script>
-  </body>
-</html>
+/* BODY STYLING */
+body {
+  background-color: antiquewhite;
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
+}
+
+/* FIXED HEADER */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background-color: #f5f0e1;
+  color: #3e3e3e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  border-color: #6f8f72;
+ 
+}
+
+.logo {
+  height: 125px;
+  margin-right: 50px;
+}
+
+/* SIDEBAR */
+.sidebar {
+  position: fixed;
+  top: 80px; /* below header */
+  left: 0;
+  width: 250px;
+  height: calc(100vh - 80px);
+  background-color: #f5f0e1;
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  
+}
+
+/* MAIN CONTENT */
+.main-content {
+  margin-top: 80px;
+  margin-left: 250px;
+  padding: 20px;
+  min-height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+/* TABS */
+.page_header {
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.tab {
+  background-color: #fff;
+  color: rgb(102, 69, 2);
+  padding: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border-radius: 10%;
+  width: 100%;
+  text-align: center;
+}
+
+.tab:hover {
+  background-color: #8fb996;
+  color: aliceblue;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+ul li {
+  margin-bottom: 10px;
+}
+
+.search-container {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.search-container input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-container button {
+  padding: 8px;
+  background-color: var(--button-color, #6f8f72);
+  color: var(--button-text, #fff);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-container button:hover {
+  background-color: var(--highlight-color, #8fb996);
+  color: #000;
+}
+
+/* Container to hold menu cards in grid */
+.menu-grid {
+  display: grid;
+  grid-template-columns:  repeat(4, 1fr);
+  gap: 6.5%;
+  row-gap: 80px;
+}
+
+/* Menu Card Layout */
+.menu-card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 5px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 120%;
+  height: 110%;
+}
+
+.menu-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.menu-card h4 {
+  margin: 10px 0 5px;
+}
+
+.menu-card p {
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #444;
+}
+
+.menu-card button {
+  padding: 8px 16px;
+  background-color: #6f8f72;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.menu-card button:hover {
+  background-color: #8fb996;
+  color: black;
+}
+
+/* Hover effect for the card */
+.menu-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+.item-details {
+  flex: 1;
+}
+
+.item-details h4 {
+  margin: 0 0 5px;
+}
+
+.item-details p {
+  margin: 0 0 10px;
+  color: #444;
+  font-weight: bold;
+}
+
+.item-details button {
+  padding: 6px 12px;
+  background-color: #6f8f72;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.item-details button:hover {
+  background-color: #8fb996;
+  color: black;
+}
+.cart-section {
+  margin-top: 30px;
+  padding-top: 15px;
+  border-top: 2px dashed #6f8f72;
+  position: sticky;
+  bottom: 0;
+  background-color: aliceblue;
+  padding-bottom: 20px;
+}
+
+.cart-section h3 {
+  margin-bottom: 10px;
+}
+
+#cart-items {
+  list-style-type: none;
+  padding-left: 0;
+  max-height: 120px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+#cart-total {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.filter-container {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.filter-container select {
+  padding: 5px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+
+</style>
+<body>
+
+<!-- Header Section -->
+<div class="header">
+  <img src="logo.png" alt="Cafe Logo" class="logo">
+  <h1>WELCOME TO OUR SMART CAFÉ☕</h1>
+</div>
+
+<!-- Sidebar with categories, search, filter, and cart -->
+<div class="sidebar">
+  <h2 class="page_header">Categories</h2>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search menu..." />
+    <button onclick="searchMenu()">Search</button>
+  </div>
+
+  <!-- Filter Dropdown -->
+  <div class="filter-container">
+    <label for="filter">Sort by:</label>
+    <select id="filter" onchange="filterMenu()">
+      <option value="default">Default</option>
+      <option value="price-asc">Price: Low to High</option>
+      <option value="price-desc">Price: High to Low</option>
+    </select>
+  </div>
+
+  <!-- Category Tabs -->
+  <div class="tab" onclick="showVegItems()">Veg Items</div>  
+  <div class="tab" onclick="showNonVegItems()">Non-Veg Items</div>
+  <div class="tab" onclick="showdrinks()">Drinks Items</div>
+  <div class="tab" onclick="showdesert()">Desert Items</div>
+
+  <!-- Shopping Cart Section -->
+  <div class="cart-section">
+    <h3>Your Cart</h3>
+    <ul id="cart-items"></ul>
+    <p id="cart-total">Total: Rs. 0</p>
+  </div>
+</div>
+
+<!-- Main Content Area -->
+<div class="main-content">
+  
+  <!-- Veg Menu -->
+  <div id="vegcontents" class="tab-content">
+    <h2 class="section-title">Veg Menu</h2>
+    <div class="menu-grid">
+      <!-- Menu Card  -->
+      <div class="menu-card">
+        <img src="Butter panner.jpeg" alt="Paneer Butter Masala">
+        <h4>Paneer Butter Masala</h4>
+        <p>Rs. 250</p>
+        <button onclick="addToCart('Paneer Butter Masala', 250)">Add to Cart</button>
+      </div>
+
+      <div class="menu-card">
+        <img src="vegbiryani.jpeg" alt="vegbiryani">
+        <h4>Veg-Biryani</h4>
+        <p>Rs. 100</p>
+        <button onclick="addToCart('Veg-Biryani', 100)">Add to Cart</button>
+      </div>
+
+      <div class="menu-card">
+        <img src="Chole.jpg" alt="Cholebhature">
+        <h4>Chole bhature</h4>
+        <p>Rs. 70</p>
+        <button onclick="addToCart('Chole Bhatura', 70)">Add to Cart</button>
+      </div>
+
+      <div class="menu-card">
+        <img src="vegmomo.jpg" alt="veg-Momo">
+        <h4>Veg-Momo</h4>
+        <p>Rs. 90</p>
+        <button onclick="addToCart('Veg-Momo', 90)">Add to Cart</button>
+      </div>
+
+      <div class="menu-card">
+        <img src="Samosa.jpg" alt="Samosa">
+        <h4>Samosa</h4>
+        <p>Rs. 30</p>
+        <button onclick="addToCart('Samosa', 30)">Add to Cart</button>
+      </div>
+
+      <div class="menu-card">
+        <img src="Dal-Makhani.jpeg" alt="Dal-Makhani">
+        <h4>Dal-Makhani</h4>
+        <p>Rs. 290</p>
+        <button onclick="addToCart('Dal-Makhani', 290)">Add to Cart</button>
+      </div>
+
+      <div class="menu-card">
+        <img src="Masala Dosa.jpeg" alt="Masala Dosa">
+        <h4>Masala Dosa</h4>
+        <p>Rs. 200</p>
+        <button onclick="addToCart('Masala Dosa', 200)">Add to Cart</button>
+      </div>
+
+      <div class="menu-card">
+        <img src="Palak Paneer.jpeg" alt="Palak Paneer">
+        <h4>Palak Paneer</h4>
+        <p>Rs. 250</p>
+        <button onclick="addToCart('Palak Paneer', 250)">Add to Cart</button>
+      </div>
+
+      <div class="menu-card">
+        <img src="Paneer Tikka.jpeg" alt="Paneer Tikka">
+        <h4>Paneer Tikka</h4>
+        <p>Rs. 200</p>
+        <button onclick="addToCart('Paneer Tikka', 200)">Add to Cart</button>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Non-Veg Menu -->
+<div id="nonvegcontents" class="tab-content">
+  <h2 class="section-title">Non-Veg Menu</h2>
+  <div class="menu-grid">
+
+    <div class="menu-card">
+      <img src="Chicken Biryani.jpeg" alt="Chicken Biryani">
+      <h4>Chicken Biryani</h4>
+      <p>Rs. 280</p>
+      <button onclick="addToCart('Chicken Biryani', 280)">Add to Cart</button>
+    </div>
+
+    <div class="menu-card">
+      <img src="Mutton Biryani.jpg" alt="Mutton Biryani">
+      <h4>Mutton Biryani</h4>
+      <p>Rs. 320</p>
+      <button onclick="addToCart('Mutton Biryani', 320)">Add to Cart</button>
+    </div>
+
+    
+
+    <div class="menu-card">
+      <img src="Mutton Sekuwa.jpeg" alt="Mutton Sekuwa">
+      <h4>Mutton Sekuwa</h4>
+      <p>Rs. 200</p>
+      <button onclick="addToCart('Mutton Sekuwa', 120)">Add to Cart</button>
+    </div>
+
+
+    <div class="menu-card">
+      <img src="Chicken Sekuwa.jpg" alt="Chicken Sekuwa">
+      <h4>Chicken Sekuwa</h4>
+      <p>Rs. 160</p>
+      <button onclick="addToCart('Chicken Sekuwa', 160)">Add to Cart</button>
+    </div>
+
+    <div class="menu-card">
+      <img src=" Chicken Lollipop.jpeg" alt=" Chicken Lollipop">
+      <h4> Chicken Lollipop</h4>
+      <p>Rs. 180</p>
+      <button onclick="addToCart(' Chicken Lollipop', 180)">Add to Cart</button>
+    </div>
+
+    <div class="menu-card">
+      <img src=" Chicken Curry.jpeg" alt=" Chicken Curry">
+      <h4> Chicken Curry</h4>
+      <p>Rs. 200</p>
+      <button onclick="addToCart(' Chicken Curry', 200)">Add to Cart</button>
+    </div>
+
+    <div class="menu-card">
+      <img src="Mutton Curry.jpeg" alt="Mutton Curry">
+      <h4>Mutton Curry</h4>
+      <p>Rs. 250</p>
+      <button onclick="addToCart('Mutton Curry', 250)">Add to Cart</button>
+    </div>
+
+
+    <div class="menu-card">
+      <img src=" Chicken Chowmein.jpeg" alt=" Chicken Chowmein">
+      <h4> Chicken Chowmein</h4>
+      <p>Rs. 150</p>
+      <button onclick="addToCart(' Chicken Chowmein', 150)">Add to Cart</button>
+    </div>
+
+    <div class="menu-card">
+      <img src="chickenmomo.jpeg" alt="Chicken Momo">
+      <h4>Chicken Momo</h4>
+      <p>Rs. 120</p>
+      <button onclick="addToCart('Chicken Momo', 120)">Add to Cart</button>
+    </div>
+
+    <div class="menu-card">
+      <img src="Mutton Chowmein.jpg" alt="Mutton Chowmein">
+      <h4>Mutton Chowmein</h4>
+      <p>Rs. 160</p>
+      <button onclick="addToCart('MuttonChowmein', 160)">Add to Cart</button>
+    </div>
+
+    
+    <div class="menu-card">
+      <img src="Mutton momo.jpeg" alt="Mutton Momo">
+      <h4>Mutton Momo</h4>
+      <p>Rs. 140</p>
+      <button onclick="addToCart('Mutton Momo', 140)">Add to Cart</button>
+    </div>
+
+    <div class="menu-card">
+      <img src="Chicken Pizza.jpeg" alt="Chicken Pizza">
+      <h4>Chicken Pizza</h4>
+      <p>Rs. 220</p>
+      <button onclick="addToCart('Chicken Pizza', 220)">Add to Cart</button>
+    </div>
+
+    
+    
+    <div class="menu-card">
+      <img src="Chicken Sandwich Rol.jpeg" alt="Chicken Sandwich Roll">
+      <h4>Chicken Sandwich Roll</h4>
+      <p>Rs. 160</p>
+      <button onclick="addToCart('Chicken Sandwich Roll', 160)">Add to Cart</button>
+    </div>
+
+    <div class="menu-card">
+      <img src="Mutton Sandwich Roll.jpeg" alt="Mutton Sandwich Roll">
+      <h4>Mutton Sandwich Roll</h4>
+      <p>Rs. 180</p>
+      <button onclick="addToCart('Mutton Sandwich Roll', 180)">Add to Cart</button>
+    </div>
+
+    <!-- Add more non-veg items below using same structure -->
+
+  </div>
+</div>
+
+
+  <!-- Drinks Menu -->
+   <div id="drinkcontents" class="tab-content">
+  <h2 class="section-title">Drinks menu</h2>
+  <div class="menu-grid">
+
+      <!-- Drinks go here -->
+       <div class="menu-card">
+      <img src="Milk Tea.jpeg" alt="Milk Tea">
+      <h4>Milk Tea</h4>
+      <p>Rs. 30</p>
+      <button onclick="addToCart('Milk Tea', 30)">Add to Cart</button>
+        </div>
+        
+
+        <div class="menu-card">
+      <img src="Black Tea.jpeg" alt="Black Tea">
+      <h4>Black Tea</h4>
+      <p>Rs. 20</p>
+      <button onclick="addToCart('Black Tea', 20)">Add to Cart</button>
+        </div>
+
+        <div class="menu-card">
+      <img src="Milk Cofee.jpeg" alt="Milk Coffee">
+      <h4>Milk Coffee</h4>
+      <p>Rs. 40</p>
+      <button onclick="addToCart('Milk Coffee', 40)">Add to Cart</button>
+        </div>
+
+        <div class="menu-card">
+      <img src="Milk Tea.jpeg" alt="Milk Tea">
+      <h4>Milk Tea</h4>
+      <p>Rs. 40</p>
+      <button onclick="addToCart('Milk Tea', 40)">Add to Cart</button>
+        </div>
+
+        <div class="menu-card">
+      <img src="Milk Tea.jpeg" alt="Milk Tea">
+      <h4>Milk Tea</h4>
+      <p>Rs. 40</p>
+      <button onclick="addToCart('Milk Tea', 40)">Add to Cart</button>
+        </div>
+
+        <div class="menu-card">
+      <img src="Milk Tea.jpeg" alt="Milk Tea">
+      <h4>Milk Tea</h4>
+      <p>Rs. 40</p>
+      <button onclick="addToCart('Milk Tea', 40)">Add to Cart</button>
+        </div>
+
+        <div class="menu-card">
+      <img src="Milk Tea.jpeg" alt="Milk Tea">
+      <h4>Milk Tea</h4>
+      <p>Rs. 40</p>
+      <button onclick="addToCart('Milk Tea', 40)">Add to Cart</button>
+        </div>
+
+        <div class="menu-card">
+      <img src="Milk Tea.jpeg" alt="Milk Tea">
+      <h4>Milk Tea</h4>
+      <p>Rs. 40</p>
+      <button onclick="addToCart('Milk Tea', 40)">Add to Cart</button>
+        </div>
+
+        <div class="menu-card">
+      <img src="Milk Tea.jpeg" alt="Milk Tea">
+      <h4>Milk Tea</h4>
+      <p>Rs. 40</p>
+      <button onclick="addToCart('Milk Tea', 40)">Add to Cart</button>
+        </div>
+  </div>       
+  </div>
+
+  <!-- Dessert Menu -->
+  <div id="desertcontents" class="tab-content">
+    <h3>Desert Menu</h3> 
+    <ul>
+      <!-- Desserts go here -->
+    </ul>       
+  </div>
+</div>
